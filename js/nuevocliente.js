@@ -16,7 +16,8 @@
             console.log("HUBO UN ERROR")
         }
         abrirConexion.onsuccess = function(){
-            DB = abrirConexion.result;
+          DB = abrirConexion.result;
+            
         }
     }
     function validarCliente(e){
@@ -31,6 +32,35 @@
         if(nombre === '' || email === '' || (telefono === '') || empresa === ''){
             imprimirAlerta('Todos los campos son obligatorios','error');
             return;
+        }
+
+        //OBject literal en 
+        const cliente = {
+            nombre,
+            email,
+            telefono,
+            empresa
+        
+        }
+        cliente.id= Date.now();
+        formulario.reset();
+        crearNuevoCliente(cliente);
+    }
+    function crearNuevoCliente(cliente){
+        
+        const transaction = DB.transaction(["crm"], 'readwrite');
+        const objectStore = transaction.objectStore('crm');
+
+        objectStore.add(cliente);
+
+        transaction.onerror = () =>{
+            imprimirAlerta('Hubo un error');
+        }
+        transaction.oncomplete = () =>{
+            imprimirAlerta('Agregado exitosamente');
+            setTimeout(()=> {
+                window.location.href = 'index.html';
+            }, 2000);
         }
     }
 
