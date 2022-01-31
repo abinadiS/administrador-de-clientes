@@ -1,11 +1,13 @@
 (function(){
-    let DB;
+
     const nombreInput = document.querySelector('#nombre');
     const emailInput = document.querySelector('#email');
     const telefonoInput = document.querySelector('#telefono');
     const empresaInput = document.querySelector('#empresa');
+    const formulario = document.querySelector('#formulario')
     document.addEventListener('DOMContentLoaded', ()=>{ 
         conectarDB();
+        formulario.addEventListener('submit', actualizarCliente);
         const parametrosURL = new URLSearchParams(window.location.search);
         const idCliente = parametrosURL.get('id');
         if(idCliente){
@@ -24,6 +26,13 @@
         abrirConexion.onsuccess = function(){
           DB = abrirConexion.result;
             
+        }
+    }
+    function actualizarCliente(e){
+        e.preventDefault();
+        if(nombreInput.value === '' || emailInput.value === '' || (telefonoInput.value === '') || empresaInput.value === ''){
+            console.log("ERROR");
+            return;
         }
     }
     function obtenerCliente(id){
@@ -49,5 +58,7 @@
         emailInput.value = email;
         empresaInput.value = empresa;
         telefonoInput.value = telefono;
+
+
     }
 }());
