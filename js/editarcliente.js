@@ -1,4 +1,5 @@
 (function(){
+    let idCliente;
 
     const nombreInput = document.querySelector('#nombre');
     const emailInput = document.querySelector('#email');
@@ -9,7 +10,7 @@
         conectarDB();
         formulario.addEventListener('submit', actualizarCliente);
         const parametrosURL = new URLSearchParams(window.location.search);
-        const idCliente = parametrosURL.get('id');
+        idCliente = parametrosURL.get('id');
         if(idCliente){
             setTimeout(() => {
                  obtenerCliente(idCliente);
@@ -33,6 +34,25 @@
         if(nombreInput.value === '' || emailInput.value === '' || (telefonoInput.value === '') || empresaInput.value === ''){
             console.log("ERROR");
             return;
+        }
+
+        //Actualizar cliente
+        const clienteActualizado = {
+            nombre : nombreInput.value,
+            email: emailInput.value,
+            empresa: empresaInput.value,
+            telefono: telefonoInput.value,
+            id : Number(idCliente)
+        }
+        const transaction = DB.transaction(['crm'], 'readwrite');
+        const objectStore = transaction.objectStore('crm');
+        objectStore.put(clienteActualizado);
+
+        transaction.oncomplete = function(){
+            console.log("Editado correctamente");
+        }
+        transaction.onerror = function(){
+            console.log("hubo un error");
         }
     }
     function obtenerCliente(id){
