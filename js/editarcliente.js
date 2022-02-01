@@ -49,7 +49,7 @@
         objectStore.put(clienteActualizado);
 
         transaction.oncomplete = function(){
-            console.log("Editado correctamente");
+           window.location.href= 'index.html'
         }
         transaction.onerror = function(){
             console.log("hubo un error");
